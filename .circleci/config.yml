@@ -81,8 +81,8 @@ workflows:
             branches:
               only: develop
       - readme_nightly:
-          requires:
-            - process_artifacts_nightly
+          #requires:
+          #  - process_artifacts_nightly
           filters:
             branches:
               only:
@@ -90,8 +90,8 @@ workflows:
                 - /ci-*/
                 - /ci_*/
       - changelog_nightly:
-          requires:
-            - process_artifacts_nightly
+          #requires:
+          #  - process_artifacts_nightly
           filters:
             branches:
               only: develop
