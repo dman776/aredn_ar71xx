@@ -78,6 +78,8 @@ workflows:
             only:
               - develop
               - master
+              - /ci-.*/
+              - /ci_.*/
       - process_artifacts_nightly:
         requires:
           - build
