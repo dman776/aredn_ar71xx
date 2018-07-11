@@ -7,11 +7,30 @@ jobs:
       - checkout
       - run:
           name: Generate changelog.md
-          command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'docker run -it --rm -v ~/:/usr/local/src/your-app ferrarimarco/github-changelog-generator -u ${CIRCLE_PROJECT_USERNAME} -p ${CIRCLE_PROJECT_REPONAME} -t ${GITHUB_TOKEN}'"
+          command: ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} "sh -c 'docker run -it --rm -v ~/:/usr/local/src/your-app ferrarimarco/github-changelog-generator -u ${CIRCLE_PROJECT_USERNAME} -p ${CIRCLE_PROJECT_REPONAME} -t ${GITHUB_TOKEN}'"
       - run:
           name: Fetch README.md
           command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'wget https://raw.githubusercontent.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}/README.md'"
 
+  process_artifacts:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          name: Untar Files
+          command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'tar -xjf ~/${CIRCLE_BRANCH}_${ARTIFACTS_FILE} -C ~/'"
+      - run:
+          name: Remove tarball
+          command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'rm ~/${CIRCLE_BRANCH}_${ARTIFACTS_FILE}'"
+      - run:
+          name: Empty nightly dir
+          command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'rm -rf ${NIGHTLY_DIR}'"
+      - run:
+          name: Move targets
+          command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ~/targets ${NIGHTLY_DIR}'"
+      - run:
+          name: Move packages
+          command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ~/packages ${NIGHTLY_DIR}'"
 workflows:
   version: 2
 
