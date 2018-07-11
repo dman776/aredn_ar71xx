@@ -73,29 +73,28 @@ workflows:
   build_deploy:
     jobs:
       - build:
-        filters:
-          branches:
-            only:
-              - develop
-              - master
-              - /ci-.*/
-              - /ci_.*/
+          filters:
+            branches:
+              only:
+                - develop
+                - master
+                - /ci-.*/
+                - /ci_.*/
       - process_artifacts_nightly:
-        requires:
-          - build
-        filters:
-          branches:
-            only: develop
+          requires:
+            - build
+          filters:
+            branches:
+              only: develop
       - readme_nightly:
-        requires:
-          - process_nightly_artifacts
-        filters:
-          branches:
-            only: develop
+          requires:
+            - process_nightly_artifacts
+          filters:
+            branches:
+              only: develop
       - changelog_nightly:
-        requires:
-          - process_nightly_artifacts
-        filters:
-          branches:
-            only: develop
-        
+          requires:
+            - process_nightly_artifacts
+          filters:
+            branches:
+              only: develop
