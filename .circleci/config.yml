@@ -1,5 +1,8 @@
 version: 2
 jobs:
+  ######################################
+  # Common
+  ######################################
   build:
     docker:
       - image: arednmesh/builder
@@ -26,6 +29,9 @@ jobs:
           name: Deploy Files
           command: scp -o StrictHostKeyChecking=no ~/${ARTIFACTS_FILE} ${SSH_USER}@${SSH_HOST}:~/
 
+  ######################################
+  # Nightly
+  ######################################
   process_artifacts_nightly:
     machine:
       enabled: true
@@ -68,6 +74,9 @@ jobs:
           name: Move README.md
           command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ~/CHANGELOG.md ${NIGHTLY_DIR}/changelog.md'"
 
+######################################
+# Workflows
+######################################
 workflows:
   version: 2
 
@@ -81,17 +90,15 @@ workflows:
             branches:
               only: develop
       - readme_nightly:
-          #requires:
-          #  - process_artifacts_nightly
+          requires:
+            - process_artifacts_nightly
           filters:
             branches:
               only:
                 - develop
-                - /ci-*/
-                - /ci_*/
       - changelog_nightly:
-          #requires:
-          #  - process_artifacts_nightly
+          requires:
+            - process_artifacts_nightly
           filters:
             branches:
               only: develop
