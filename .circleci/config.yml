@@ -87,7 +87,7 @@ workflows:
       - changelog:
         requires:
           - process_artifacts
-      - readme
+      - readme:
         requires:
           - process_artifacts
 
