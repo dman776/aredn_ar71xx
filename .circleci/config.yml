@@ -72,14 +72,7 @@ workflows:
 
   build_deploy:
     jobs:
-      - build:
-          filters:
-            branches:
-              only:
-                - develop
-                - master
-                - /ci-.*/
-                - /ci_.*/
+      - build
       - process_artifacts_nightly:
           requires:
             - build
