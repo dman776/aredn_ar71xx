@@ -43,10 +43,23 @@ jobs:
           name: Move changelog
           command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ~/CHANGELOG.md ${NIGHTLY_DIR}'"
 
+  readme:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          name: Fetch README.md
+          command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'wget https://raw.githubusercontent.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}/README.md'"
+      - run:
+          name: Move README.md
+          command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ~/CHANGELOG.md ${NIGHTLY_DIR}/changelog.md'"
+
 workflows:
   version: 2
 
   my_workflow:
     jobs:
       - build
-      - changelog
+      - readme:
+          depends:
+              - build
