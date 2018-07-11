@@ -61,5 +61,5 @@ workflows:
     jobs:
       - build
       - readme:
-          depends:
+          requires:
               - build
