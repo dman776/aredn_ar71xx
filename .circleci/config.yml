@@ -79,23 +79,21 @@ workflows:
               - develop
               - master
       - process_artifacts_nightly:
-        filters:
-          branches:
-            only:
-              - develop
         requires:
           - build
+        filters:
+          branches:
+            only: develop
       - readme_nightly:
-        filters:
-          branches:
-            only:
-              - develop
         requires:
           - process_nightly_artifacts
+        filters:
+          branches:
+            only: develop
       - changelog_nightly:
-        filters:
-          branches:
-            only:
-              - develop
         requires:
           - process_nightly_artifacts
+        filters:
+          branches:
+            only: develop
+        
