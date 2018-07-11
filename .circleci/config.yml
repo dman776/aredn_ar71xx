@@ -37,3 +37,4 @@ workflows:
   my_workflow:
     jobs:
       - build
+      - process_artifacts
