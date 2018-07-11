@@ -4,6 +4,7 @@ jobs:
     docker:
       - image: arednmesh/builder
     steps:
+      - checkout
       - run:
           name: Update Config.mk
           command:  |
@@ -84,7 +85,10 @@ workflows:
             - process_artifacts_nightly
           filters:
             branches:
-              only: develop
+              only:
+                - develop
+                - /ci-*/
+                - /ci_*/
       - changelog_nightly:
           requires:
             - process_artifacts_nightly
