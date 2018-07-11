@@ -81,13 +81,13 @@ workflows:
               only: develop
       - readme_nightly:
           requires:
-            - process_nightly_artifacts
+            - process_artifacts_nightly
           filters:
             branches:
               only: develop
       - changelog_nightly:
           requires:
-            - process_nightly_artifacts
+            - process_artifacts_nightly
           filters:
             branches:
               only: develop
