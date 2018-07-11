@@ -72,13 +72,13 @@ workflows:
   version: 2
 
   nightly:
-    triggers:
-      - schedule:
-          cron: "0 0 * * *"
-          filters:
-            branches:
-              only:
-                - develop
+    #triggers:
+    #  - schedule:
+    #      cron: "0 0 * * *"
+    #      filters:
+    #        branches:
+    #          only:
+    #            - develop
     jobs:
       - build
       - process_artifacts:
