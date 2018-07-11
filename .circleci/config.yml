@@ -31,10 +31,22 @@ jobs:
       - run:
           name: Move packages
           command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ~/packages ${NIGHTLY_DIR}'"
+
+  changelog:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          name: Generate changelog.md
+          command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'docker run -it --rm -v ~/:/usr/local/src/your-app ferrarimarco/github-changelog-generator -u ${CIRCLE_PROJECT_USERNAME} -p ${CIRCLE_PROJECT_REPONAME} -t ${GITHUB_TOKEN}'"
+      - run:
+          name: Move changelog
+          command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ~/CHANGELOG.md ${NIGHTLY_DIR}'"
+
 workflows:
   version: 2
 
   my_workflow:
     jobs:
       - build
-      - process_artifacts
+      - changelog
