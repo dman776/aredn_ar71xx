@@ -1622,7 +1622,15 @@ sub get_interface
     } elsif ( $intf eq "wan" ){
       return "eth0.1";
     } elsif ( $intf eq "wifi" ){
-      return "wlan0";
+      BOARD_TYPE=$(/usr/local/bin/get_hardwaretype)
+      case "$BOARD_TYPE" in
+        rb-952ui-5ac2nd)
+          return "wlan1"; # 5Ghz for mesh by default on dual band
+          ;;
+        *)
+          return "wlan0";
+          ;;
+      esac
     } elsif ( $intf eq "dtdlink" ){
       return "eth0.2";
     } else {

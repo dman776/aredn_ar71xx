@@ -1,0 +1,24 @@
+Index: openwrt/target/linux/ar71xx/base-files/etc/board.d/02_network
+===================================================================
+--- openwrt.orig/target/linux/ar71xx/base-files/etc/board.d/02_network
++++ openwrt/target/linux/ar71xx/base-files/etc/board.d/02_network
+@@ -170,7 +170,6 @@ ar71xx_setup_interfaces()
+ 	pb42|\
+ 	pb44|\
+ 	rb-951ui-2hnd|\
+-	rb-952ui-5ac2nd|\
+ 	routerstation|\
+ 	tl-wr710n|\
+ 	tl-wr720n-v3|\
+@@ -189,6 +188,11 @@ ar71xx_setup_interfaces()
+ 		ucidef_add_switch "switch0" \
+ 			"0@eth1" "1:lan:4" "2:lan:3" "3:lan:2" "4t:unused" "4t:dtdlink"
+ 		;;
++	rb-952ui-5ac2nd)
++                ucidef_set_interface_wan "eth0"
++                ucidef_add_switch "switch0" \
++                        "0@eth1" "1:lan:4" "2:lan:3" "3:lan:2" "4t:unused" "4t:dtdlink"
++                ;;
+ 	all0258n|\
+ 	all0315n|\
+ 	dlan-hotspot|\
