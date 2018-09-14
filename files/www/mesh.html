@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>... : Mesh Status</title>
+
+    <meta name="description" content="Source code generated using layoutit.com">
+    <meta name="author" content="LayoutIt!">
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+	<!-- link href="css/sketchy_bootstrap.min.css" rel="stylesheet"-->
+	<!-- link href="css/darkly_bootstrap.min.css" rel="stylesheet" -->
+	<!-- link href="css/flatly_bootstrap.min.css" rel="stylesheet" -->
+	<!-- link href="css/sandstone_bootstrap.min.css" rel="stylesheet" -->
+	</head>
+	<body>
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-md-4">
+					<a href="http://localnode.local.mesh:8080/"><img alt="AREDN" class="img-fluid" src="/AREDN.png"></a>
+				</div>
+				<div class="col-md-8">
+					<div class="page-header">
+						<h1><span id="node" class="text-primary">...</span></h1>
+						<h6><span id="description" class="text-secondary">...</span></h6>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mb-2">
+				<div class="col-md-12">
+					<hr />
+					<nav class="nav nav-pills nav-fill">
+						<a class="nav-item nav-link" href="/help.html">Help</a>
+						<a class="nav-item nav-link" href="/status.html">Status</a>
+						<a class="nav-item nav-link active" href="/mesh.html">Mesh Status</a>
+						<a class="nav-item nav-link" href="/cgi-bin/scan">WiFi Scan</a>
+						<a class="nav-item nav-link" href="/cgi-bin/setup">Setup</a>
+						<a class="nav-item nav-link" href="/cgi-bin/signal?realtime=1">Charts</a>
+					</nav>
+					<hr />
+				</div>
+			</div>
+
+			<div class="row mb-2">
+				<div class="card-deck col-md-12 text-md-right">
+					<div class="card shadow-sm mb-2">
+						<div class="card-header text-center">
+							<h4 class="text-center mb-1">Local Hosts</h4>
+							<table class="table mb-0">
+								<tbody>
+									<tr>
+										<td scope="row">Name</td>
+										<td scope="row">ETX</td>
+										<td scope="row">Services</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="card-body">
+							<table class="table table-striped text-md-left">
+								<tbody>
+									<tr>
+										<td><span id="wifi">node-node-100</span></td>
+										<td><span id="wifi">1.0</span></td>
+										<td><span id="wifi">service1</span></td>
+									</tr>
+									<tr>
+										<td>&raquo;&nbsp;&nbsp;host101</td>
+										<td />
+										<td />
+									</tr>
+									<tr>
+										<td>&raquo;&nbsp;&nbsp;host102</td>
+										<td />
+										<td>meshchat102</td>
+									</tr>
+									<tr>
+										<td><span id="wifi">node</span></td>
+										<td><span id="wifi">etx1</span></td>
+										<td><span id="wifi">service1</span></td>
+									</tr>
+									<tr>
+										<td><span id="wifi">node</span></td>
+										<td><span id="wifi">etx1</span></td>
+										<td><span id="wifi">service1</span></td>
+									</tr>
+								</tbody>
+							</table>
+					    </div>
+					</div>
+					<div class="card shadow-sm mb-2">
+						<div class="card-header">
+							<h4 class="text-center">Current Neighbors</h4>
+				        </div>
+				        <div class="card-body">
+							<table class="table table-striped">
+								<tbody>
+									<tr>
+										<th scope="row">Host</th>
+										<td><span id="ssid">...</span></td>
+									</tr>
+									<tr>
+										<th scope="row">host</th>
+										<td><span id="channel">...</span></td>
+									</tr>
+								</tbody>
+							</table>
+				        </div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mb-2">
+				<div class="card-deck col-md-12 text-center text-md-right">
+					<div class="card shadow-sm">
+						<div class="card-header">
+						        <h4 class="text-center">Remote Nodes</h4>
+				        </div>
+				        <div class="card-body">
+							<table class="table table-striped">
+								<tbody>
+									<tr>
+										<th scope="row">host</th>
+										<td><span id="lat">...</span></td>
+									</tr>
+									<tr>
+										<th scope="row">host</th>
+										<td><span id="lon">...</span></td>
+									</tr>
+								</tbody>
+							</table>
+				        </div>
+					</div>
+					<div class="card shadow-sm">
+						<div class="card-header">
+						        <h4 class="text-center">Previous Neighbors</h4>
+				        </div>
+				        <div class="card-body">
+							<table class="table table-striped">
+								<tbody>
+									<tr>
+										<th scope="row">host</th>
+										<td><span id="uptime">...</span></td>
+									</tr>
+									<tr>
+										<th scope="row">host</th>
+										<td><span id="loads1">...</span></td>
+									</tr>
+								</tbody>
+							</table>
+				        </div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<hr />
+					Part of the AREDN&trade; Project. For more details please see <a href="http://www.arednmesh.org">www.arednmesh.org</a>
+				</div>
+			</div>
+		</div>
+
+	    <script src="js/jquery.min.js"></script>
+	    <script src="js/bootstrap.min.js"></script>
+	    <script src="js/scripts.js"></script>
+	    <script>
+	    		// System Information Deck
+				fetch('http://' + window.location.hostname + ':' + window.location.port + '/cgi-bin/api?mesh=sysinfo')
+				  .then(function(response) {
+				    return response.json();
+				  })
+				  .then(function(myJson) {
+				  	// Local Hosts
+				  	document.getElementById("node").innerHTML = myJson['pages']['mesh']['sysinfo']['node'];
+				  	document.title = myJson['pages']['mesh']['sysinfo']['node'] + ' : Mesh Status';
+				  	document.getElementById("description").innerHTML = myJson['pages']['mesh']['sysinfo']['description'];
+				  	document.getElementById("model").innerHTML = myJson['pages']['mesh']['sysinfo']['model'];
+				  	
+				  });
+
+				  // Current Neighbors
+				  fetch('http://' + window.location.hostname + ':' + window.location.port + '/cgi-bin/api?mesh=currentneighbors')
+				  .then(function(response) {
+				    return response.json();
+				  })
+				  .then(function(myJson) {
+				  	document.getElementById("wifi").innerHTML = myJson['pages']['status']['ip']['wifi'];
+				  	document.getElementById("lan").innerHTML = myJson['pages']['status']['ip']['lan'];
+				  });
+
+				  // Remote Hosts
+				  fetch('http://' + window.location.hostname + ':' + window.location.port + '/cgi-bin/api?mesh=remotehosts')
+				  .then(function(response) {
+				    return response.json();
+				  })
+				  .then(function(myJson) {
+				  	document.getElementById("ssid").innerHTML = myJson['pages']['status']['meshrf']['ssid'];
+				  	document.getElementById("channel").innerHTML = myJson['pages']['status']['meshrf']['channel'];
+				  	document.getElementById("chanbw").innerHTML = myJson['pages']['status']['meshrf']['chanbw'];
+				  });
+
+				  // Previous Neighbors
+				   fetch('http://' + window.location.hostname + ':' + window.location.port + '/cgi-bin/api?mesh=previousneighbors')
+				  .then(function(response) {
+				    return response.json();
+				  })
+				  .then(function(myJson) {
+					document.getElementById("free_ram").innerHTML = myJson['pages']['mesh']['memory']['freeram'];
+					document.getElementById("shared_ram").innerHTML = myJson['pages']['mesh']['memory']['sharedram'];
+					document.getElementById("buffer_ram").innerHTML = myJson['pages']['mesh']['memory']['bufferram'];
+				  });
+
+
+			</script>
+ 	</body>
+</html>

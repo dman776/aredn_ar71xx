@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>... : Status</title>
+
+    <meta name="description" content="Source code generated using layoutit.com">
+    <meta name="author" content="LayoutIt!">
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- link href="css/style.css" rel="stylesheet" -->
+	<!--link href="css/sketchy_bootstrap.min.css" rel="stylesheet" -->
+	<!-- link href="css/darkly_bootstrap.min.css" rel="stylesheet" -- >
+	<!-- link href="css/flatly_bootstrap.min.css" rel="stylesheet" -->
+	<!-- link href="css/sandstone_bootstrap.min.css" rel="stylesheet" -->
+	</head>
+	<body>
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-md-4">
+					<a href="http://localnode.local.mesh:8080/"><img alt="AREDN" class="img-fluid" src="/AREDN.png"></a>
+				</div>
+				<div class="col-md-8">
+					<div class="page-header">
+						<h1><span id="node" class="text-primary">...</span></h1>
+						<h6><span id="description" class="text-secondary">...</span></h6>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mb-2">
+				<div class="col-md-12">
+					<hr />
+					<nav class="nav nav-pills nav-fill">
+						<a class="nav-item nav-link" href="/help.html">Help</a>
+						<a class="nav-item nav-link active" href="/status.html">Status</a>
+						<a class="nav-item nav-link" href="/mesh.html">Mesh Status</a>
+						<a class="nav-item nav-link" href="/cgi-bin/scan">WiFi Scan</a>
+						<a class="nav-item nav-link" href="/cgi-bin/setup">Setup</a>
+						<a class="nav-item nav-link" href="/cgi-bin/signal?realtime=1">Charts</a>
+					</nav>
+					<hr />
+				</div>
+			</div>
+
+			<div class="row mb-2">
+				<div class="card-deck col-md-12 text-md-right">
+					<div class="card shadow-sm mb-2">
+						<div class="card-header">
+							<h4 class="text-center">Networking/Routing</h4>
+						</div>
+						<div class="card-body">
+							<table class="table table-striped">
+								<tbody>
+									<tr>
+										<th scope="row">WiFi Address</th>
+										<td><span id="wifi">...</span></td>
+									</tr>
+									<tr>
+										<th scope="row">LAN Address</th>
+										<td><span id="lan">...</span></td>
+									</tr>
+									<tr>
+										<th scope="row">WAN Address</th>
+										<td><span id="wan">...</span></td>
+									</tr>
+									<tr>
+										<th scope="row">Default Gateway</th>
+										<td><span id="gateway">...</span></td>
+									</tr>
+									<tr>
+										<th scope="row"><a id="olsr_json" href="">OLSR Entries</a></th>
+										<td><span id="olsr_entries">...</span></td>
+									</tr>
+									<tr>
+										<th scope="row">OLSR Nodes</th>
+										<td><span id="olsr_nodes">...</span></td>
+									</tr>
+								</tbody>
+							</table>
+				        </div>
+					</div>
+					<div class="card shadow-sm mb-2">
+						<div class="card-header">
+							<h4 class="text-center">Mesh RF</h4>
+				        </div>
+				        <div class="card-body">
+							<table class="table table-striped">
+								<tbody>
+									<tr>
+										<th scope="row">SSID</th>
+										<td><span id="ssid">...</span></td>
+									</tr>
+									<tr>
+										<th scope="row">Channel</th>
+										<td><span id="channel">...</span></td>
+									</tr>
+									<tr>
+										<th scope="row">Bandwidth</th>
+										<td><span id="chanbw">...</span></td>
+									</tr>
+								</tbody>
+							</table>
+				        </div>
+					</div>
+					<div class="card shadow-sm mb-2">
+						<div class="card-header">
+						        <h4 class="text-center">System Information</h4>
+				        </div>
+				        <div class="card-body">
+							<table class="table table-striped">
+								<tbody>
+									<tr>
+										<th scope="row">Model</th>
+										<td><span id="model">...</span></td>
+									</tr>
+									<tr>
+										<th scope="row">Firmware Version</th>
+										<td><span id="firmware_version">...</span></td>
+									</tr>
+									<tr>
+										<th scope="row">Date</th>
+										<td><span id="date">...</span></td>
+									</tr>
+									<tr>
+										<th scope="row">Time</th>
+										<td><span id="time">...</span></td>
+									</tr>
+								</tbody>
+							</table>
+				        </div>
+					</div>
+				</div>
+			</div>
+			<div class="row mb-2">
+				<div class="card-deck col-md-12 text-center text-md-right">
+					<div class="card shadow-sm">
+						<div class="card-header">
+						        <h4 class="text-center">Location</h4>
+				        </div>
+				        <div class="card-body">
+							<table class="table table-striped">
+								<tbody>
+									<tr>
+										<th scope="row">Latitude</th>
+										<td><span id="lat">...</span></td>
+									</tr>
+									<tr>
+										<th scope="row">Longitude</th>
+										<td><span id="lon">...</span></td>
+									</tr>
+									<tr>
+										<th scope="row">Grid Square</th>
+										<td><span id="gridsquare">...</span></td>
+									</tr>
+								</tbody>
+							</table>
+				        </div>
+					</div>
+					<div class="card shadow-sm">
+						<div class="card-header">
+						        <h4 class="text-center">Performance</h4>
+				        </div>
+				        <div class="card-body">
+							<table class="table table-striped">
+								<tbody>
+									<tr>
+										<th scope="row">Uptime</th>
+										<td><span id="uptime">...</span></td>
+									</tr>
+									<tr>
+										<th scope="row">Load Avg (Last Minute)</th>
+										<td><span id="loads1">...</span></td>
+									</tr>
+									<tr>
+										<th scope="row">Load Last (5 Minutes)</th>
+										<td><span id="loads2">...</span></td>
+									</tr>
+									<tr>
+										<th scope="row">Load Last (15 Minutes)</th>
+										<td><span id="loads3">...</span></td>
+									</tr>
+								</tbody>
+							</table>
+				        </div>
+					</div>
+					<div class="card shadow-sm">
+						<div class="card-header">
+						        <h4 class="text-center">Memory and Storage</h4>
+				        </div>
+				        <div class="card-body">
+							<table class="table table-striped">
+								<tbody>
+									<tr>
+										<th scope="row">Free RAM</th>
+										<td><span id="free_ram">...</span> KB</td>
+									</tr>
+									<tr>
+										<th scope="row">Shared RAM</th>
+										<td><span id="shared_ram">...</span> KB</td>
+									</tr>
+									<tr>
+										<th scope="row">Buffer RAM</th>
+										<td><span id="buffer_ram">...</span> KB</td>
+									</tr>
+									<tr>
+										<th scope="row">Freespace /</th>
+										<td><span id="free_root">...</span> KB</td>
+									</tr>
+									<tr>
+										<th scope="row">Freespace /tmp</th>
+										<td><span id="free_tmp">...</span> KB</td>
+									</tr>
+								</tbody>
+							</table>
+				        </div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<hr />
+					Part of the AREDN&trade; Project. For more details please see <a href="http://www.arednmesh.org">www.arednmesh.org</a>
+				</div>
+			</div>
+		</div>
+
+	    <script src="js/jquery-3.3.1.slim.min.js"></script>
+	    <script src="js/bootstrap.min.js"></script>
+	    <script>
+	    		// System Information Deck
+				fetch('http://' + window.location.hostname + ':' + window.location.port + '/cgi-bin/api?status=sysinfo,ip,olsr,meshrf,memory,storage,location')
+				  .then(function(response) {
+				    return response.json();
+				  })
+				  .then(function(myJson) {
+				  	// system information
+				  	nodename = myJson['pages']['status']['sysinfo']['node'];
+				  	document.getElementById("node").innerHTML = nodename;
+				  	document.getElementById("olsr_json").href=
+				  		'http://' + nodename +	'.local.mesh:9090/all';
+				  	document.title = nodename + ' : Status';
+				  	document.getElementById("description").innerHTML = myJson['pages']['status']['sysinfo']['description'];
+				  	document.getElementById("model").innerHTML = myJson['pages']['status']['sysinfo']['model'];
+				  	document.getElementById("firmware_version").innerHTML = myJson['pages']['status']['sysinfo']['firmware_version'];
+				  	document.getElementById("date").innerHTML = myJson['pages']['status']['sysinfo']['date'];
+				  	document.getElementById("time").innerHTML = myJson['pages']['status']['sysinfo']['time'];
+				  	document.getElementById("uptime").innerHTML = myJson['pages']['status']['sysinfo']['uptime'];
+				  	document.getElementById("loads1").innerHTML = myJson['pages']['status']['sysinfo']['loads'][0];
+					document.getElementById("loads2").innerHTML = myJson['pages']['status']['sysinfo']['loads'][1];
+					document.getElementById("loads3").innerHTML = myJson['pages']['status']['sysinfo']['loads'][2];
+					
+					// network/routing
+				  	document.getElementById("wifi").innerHTML = myJson['pages']['status']['ip']['wifi'];
+				  	document.getElementById("lan").innerHTML = myJson['pages']['status']['ip']['lan'];
+				  	document.getElementById("wan").innerHTML = myJson['pages']['status']['ip']['wan'];
+				  	document.getElementById("gateway").innerHTML = myJson['pages']['status']['ip']['gateway'];
+					document.getElementById("olsr_entries").innerHTML = myJson['pages']['status']['olsr']['entries'];
+					document.getElementById("olsr_nodes").innerHTML = myJson['pages']['status']['olsr']['nodes'];
+					
+					// meshrf
+				  	document.getElementById("ssid").innerHTML = myJson['pages']['status']['meshrf']['ssid'];
+				  	document.getElementById("channel").innerHTML = myJson['pages']['status']['meshrf']['channel'];
+				  	document.getElementById("chanbw").innerHTML = myJson['pages']['status']['meshrf']['chanbw'];
+				 
+					// memory
+					document.getElementById("free_ram").innerHTML = myJson['pages']['status']['memory']['freeram'];
+					document.getElementById("shared_ram").innerHTML = myJson['pages']['status']['memory']['sharedram'];
+					document.getElementById("buffer_ram").innerHTML = myJson['pages']['status']['memory']['bufferram'];
+
+					// storage
+					document.getElementById("free_root").innerHTML = myJson['pages']['status']['storage']['rootfree'];
+					document.getElementById("free_tmp").innerHTML = myJson['pages']['status']['storage']['tmpfree'];
+				  
+				  	// location
+				  	document.getElementById("lat").innerHTML = myJson['pages']['status']['location']['lat'];
+				  	document.getElementById("lon").innerHTML = myJson['pages']['status']['location']['lon'];
+				  	document.getElementById("gridsquare").innerHTML = myJson['pages']['status']['location']['gridsquare'];
+				  });
+			</script>
+ 	</body>
+</html>
