@@ -117,6 +117,12 @@ function getCurrentNeighbors()
 	return info
 end
 
+function getServicesByNode()
+	local nodes=getAllHosts()
+   	return nodes
+end
+
+
 -- ==== MAIN =====
 ctx = uci.cursor()
 if not ctx then
@@ -180,6 +186,16 @@ for page, comps in pairs(qsset) do
 				info['pages'][page][comp]=getCurrentNeighbors()
 			elseif comp=="previousneighbors" then
 				info['pages'][page][comp]={}
+			end		
+		end
+	elseif page=="services" then
+		for i,comp in pairs(comps:split(',')) do
+			if comp=="sysinfo" then
+				info['pages'][page][comp]=getSysinfo()
+			elseif comp=="bynode" then
+				info['pages'][page][comp]=getServicesByNode()
+			elseif comp=="byservice" then
+				info['pages'][page][comp]=getServicesByService()
 			end		
 		end
 	end	

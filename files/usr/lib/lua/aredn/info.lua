@@ -263,3 +263,65 @@ function getInterfaceType(iface)
 	end
 	return ift
 end
+
+function getAllHosts()
+	local hosts = {}
+	local allhosts = {}
+	local nodes = {}
+	local info = {}
+	-- read /var/run/hosts_olsr
+	local hfile=io.open("/var/run/hosts_olsr","r")
+	local lines={}
+
+	if hfile~=nil then
+		for line in hfile:lines() do
+			table.insert(lines, line)
+		end
+		hfile:close()
+	end
+
+	-- Process lines into hosts table
+	for i, line in pairs(lines) do
+		if not (string.match(line,"^[#%s]")
+			or line==""
+			or string.match(line,"^127%.0%.0%.1")
+			or string.match(line,"^::1")
+			) then
+			local ip, hostname, node = string.match(line,"([.%w]+)%s(.+)%s#%s([.%w]+)%s-")
+			if not (string.match(hostname, "^mid%d.+")
+				or string.match(hostname, "^dtdlink.+")
+				) then
+				allhosts[ip]={}
+				allhosts[ip]['name']=hostname
+				allhosts[ip]['parent_node']=node
+			end
+		end
+	end
+
+	-- add all seperate NODES and HOSTS
+	for ip, host in pairs(allhosts) do
+		if ip==allhosts[ip]['parent_node'] then
+			nodes[ip]={}
+			nodes[ip]['name']=host['name']
+		else
+			hosts[ip]=allhosts[ip]
+		end
+	end
+
+	-- next, add hosts to nodes
+	-- for ip, host in pairs(hosts) do
+	-- 	if not setContains(nodes, ip) then
+	-- 		nodes[ip]['hosts']={}
+	-- 		table.insert(nodes[ip]['hosts'],host['parent_node'])
+	-- 		--nodes[host['ip']]="test"
+	-- 	end
+		
+	-- end
+	nodes['hosts']=hosts
+
+	return nodes
+end
+
+function getNodes()
+	return {}
+end
