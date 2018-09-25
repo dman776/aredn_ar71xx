@@ -3,6 +3,25 @@ jobs:
   ######################################
   # Common
   ######################################
+  
+  check2build:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          name: Retrieve last build info and check
+          command: ssh ${SSH_USER}@${SSH_HOST} "sh -c ' ~/needs2build.sh ${CIRCLE_PROJECT_USERNAME} ${CIRCLE_PROJECT_REPONAME} ${CIRCLE_BRANCH} ${CIRCLE_SHA1}'"
+  save_build_info:
+      machine:
+        enabled: true
+      steps:
+        - run:
+            name: Save last build info
+            command: ssh ${SSH_USER}@${SSH_HOST} "sh -c ' echo ${CIRCLE_SHA1} > ~/build_info/${CIRCLE_PROJECT_USERNAME}_${CIRCLE_PROJECT_REPONAME}_${CIRCLE_BRANCH}'"
+
+  ######################################
+  # Nightly
+  ######################################
   build:
     docker:
       - image: arednmesh/builder
@@ -27,24 +46,7 @@ jobs:
       - run:
           name: Deploy Files
           command: scp -o StrictHostKeyChecking=no ~/${CIRCLE_BRANCH}_${ARTIFACTS_FILE} ${SSH_USER}@${SSH_HOST}:~/
-  check2build:
-    machine:
-      enabled: true
-    steps:
-      - run:
-          name: Retrieve last build info and check
-          command: ssh ${SSH_USER}@${SSH_HOST} "sh -c ' ~/needs2build.sh ${CIRCLE_PROJECT_USERNAME} ${CIRCLE_PROJECT_REPONAME} ${CIRCLE_BRANCH} ${CIRCLE_SHA1}'"
-  save_build_info:
-      machine:
-        enabled: true
-      steps:
-        - run:
-            name: Save last build info
-            command: ssh ${SSH_USER}@${SSH_HOST} "sh -c ' echo ${CIRCLE_SHA1} > ~/build_info/${CIRCLE_PROJECT_USERNAME}_${CIRCLE_PROJECT_REPONAME}_${CIRCLE_BRANCH}'"
 
-  ######################################
-  # Nightly
-  ######################################
   process_artifacts_nightly:
     machine:
       enabled: true
@@ -87,12 +89,97 @@ jobs:
           name: Move README.md
           command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ~/README.md ${NIGHTLY_DIR}/readme.md'"
 
+  ######################################
+  # Production Release (MASTER)
+  ######################################
+  build_prod:
+    docker:
+      - image: arednmesh/builder
+    steps:
+      - checkout
+      - run:
+          name: Update Config.mk
+          command:  |
+            export MY_WORKING_DIRECTORY=`pwd`
+            sed -i "s/NoCall/${CIRCLE_BUILD_NUM}/g" ${MY_WORKING_DIRECTORY}/config.mk
+            sed -i "s/MAKE_ARGS=-j3/MAKE_ARGS=-j${DASH_J_VALUE}/g" ${MY_WORKING_DIRECTORY}/config.mk
+            # parse ${CIRCLE_TAG} into 3, 18, 3.18.9.0
+            # sed update downloads path with above
+            # sed change version to ${CIRCLE_TAG}
+            cat ${MY_WORKING_DIRECTORY}/config.mk
+      - run:
+          name: Build
+          command: make
+      - run:
+          name: Build
+          command: make SUBTARGET=mikrotik
+      - run:
+          name: Compress build files
+          command: tar -cjf ~/${CIRCLE_BRANCH}_${ARTIFACTS_FILE} -C ${MY_WORKING_DIRECTORY}/${ARTIFACTS_DIR} .
+      - run:
+          name: Deploy Files
+          command: scp -o StrictHostKeyChecking=no ~/${CIRCLE_BRANCH}_${ARTIFACTS_FILE} ${SSH_USER}@${SSH_HOST}:~/
+  process_artifacts_prod:
+    machine:
+      enabled: true
+        steps:
+          - run:
+              name: Untar Files
+              command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'tar -xjf ~/${CIRCLE_BRANCH}_${ARTIFACTS_FILE} -C ~/'"
+          - run:
+              name: Create nightly dir
+              command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mkdir -p ${PROD_STAGE_DIR}'"
+          - run:
+              name: Move targets
+              command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ~/targets ${PROD_STAGE_DIR}'"
+          - run:
+              name: Move packages
+              command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ~/packages ${PROD_STAGE_DIR}'"
+
+  move2downloads:
+    machine:
+      enabled: true
+        steps:
+          - run:
+              name: Move generic targets
+              command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ${PROD_STAGE_DIR}/targets/generic/* ${PROD_DIR}'"
+          - run:
+              name: Move mikrotik targets
+              command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ${PROD_STAGE_DIR}/targets/mikrotik/* ${PROD_DIR}'"
+          - run:
+              name: Move packages
+              command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ${PROD_STAGE_DIR}/packages/* ${PROD_DIR}/packages'"
+
+  generate_index_page:
+    machine:
+      enabled: true
+        steps:
+          - run:
+              name: Generate Index Page
+              command: ssh ${SSH_USER}@${SSH_HOST} "sh -c '${GEN_DIR}/${GEN_INDEX_SCRIPT} ${CIRCLE_TAG}'"
+
+  generate_list_files:
+    machine:
+      enabled: true
+        steps:
+          - run:
+              name: Generate List Files
+              command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'cd ${GEN_DIR}; ./${GEN_DIR}/${GEN_LIST_SCRIPT}'"
+  move_list_files:
+    machine:
+      enabled: true
+        steps:
+          - run:
+              name: Deploy List Files
+              command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ${GEN_DIR}/*.list ${PROD_DIR}'"
+
 ######################################
 # Workflows
 ######################################
 workflows:
   version: 2
 
+  # Nightly Build Workflow
   nightly:
     triggers:
       - schedule:
@@ -127,3 +214,49 @@ workflows:
           filters:
             branches:
               only: develop
+
+  # Production RELEASE Workflow
+  prod:
+    jobs:
+      - build_prod:
+          filters:
+            tags:
+              only: /^([0-9]+\.){3}[0-9]+$/
+      - process_artifacts_prod:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /^([0-9]+\.){3}[0-9]+$/
+      - manual_verify:
+          type: approval
+          requires:
+              - process_artifacts_prod
+            filters:
+              tags:
+                only: /^([0-9]+\.){3}[0-9]+$/
+      - move2downloads:
+          requires:
+              - manual_verify
+            filters:
+              tags:
+                only: /^([0-9]+\.){3}[0-9]+$/
+      - generate_index_page:
+          requires:
+              - move2downloads
+            filters:
+              tags:
+                only: /^([0-9]+\.){3}[0-9]+$/
+      - generate_list_files:
+          requires:
+              - move2downloads
+            filters:
+              tags:
+                only: /^([0-9]+\.){3}[0-9]+$/
+      - move_list_files:
+          requires:
+              - move2downloads
+            filters:
+              tags:
+                only: /^([0-9]+\.){3}[0-9]+$/
+
