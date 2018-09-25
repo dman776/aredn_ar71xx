@@ -17,7 +17,6 @@ jobs:
         - run:
             name: Save last build info
             command: ssh ${SSH_USER}@${SSH_HOST} "sh -c ' echo ${CIRCLE_SHA1} > ~/build_info/${CIRCLE_PROJECT_USERNAME}_${CIRCLE_PROJECT_REPONAME}_${CIRCLE_BRANCH}'"
-
   ######################################
   # Nightly
   ######################################
@@ -142,38 +141,38 @@ jobs:
       enabled: true
     steps:
       - run:
-        name: Move generic targets
-        command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ${PROD_STAGE_DIR}/targets/generic/* ${PROD_DIR}'"
+          name: Move generic targets
+          command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ${PROD_STAGE_DIR}/targets/generic/* ${PROD_DIR}'"
       - run:
-        name: Move mikrotik targets
-        command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ${PROD_STAGE_DIR}/targets/mikrotik/* ${PROD_DIR}'"
+          name: Move mikrotik targets
+          command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ${PROD_STAGE_DIR}/targets/mikrotik/* ${PROD_DIR}'"
       - run:
-        name: Move packages
-        command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ${PROD_STAGE_DIR}/packages/* ${PROD_DIR}/packages'"
+          name: Move packages
+          command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ${PROD_STAGE_DIR}/packages/* ${PROD_DIR}/packages'"
 
   generate_index_page:
     machine:
       enabled: true
     steps:
       - run:
-        name: Generate Index Page
-        command: ssh ${SSH_USER}@${SSH_HOST} "sh -c '${GEN_DIR}/${GEN_INDEX_SCRIPT} ${CIRCLE_TAG}'"
+          name: Generate Index Page
+          command: ssh ${SSH_USER}@${SSH_HOST} "sh -c '${GEN_DIR}/${GEN_INDEX_SCRIPT} ${CIRCLE_TAG}'"
 
   generate_list_files:
     machine:
       enabled: true
     steps:
       - run:
-        name: Generate List Files
-        command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'cd ${GEN_DIR}; ./${GEN_DIR}/${GEN_LIST_SCRIPT}'"
-          
+          name: Generate List Files
+          command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'cd ${GEN_DIR}; ./${GEN_DIR}/${GEN_LIST_SCRIPT}'"
+
   move_list_files:
     machine:
       enabled: true
     steps:
       - run:
-        name: Deploy List Files
-        command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ${GEN_DIR}/*.list ${PROD_DIR}'"
+          name: Deploy List Files
+          command: ssh ${SSH_USER}@${SSH_HOST} "sh -c 'mv ${GEN_DIR}/*.list ${PROD_DIR}'"
 
 ######################################
 # Workflows
@@ -234,31 +233,31 @@ workflows:
           type: approval
           requires:
               - process_artifacts_prod
-            filters:
-              tags:
-                only: /^([0-9]+\.){3}[0-9]+$/
+          filters:
+            tags:
+              only: /^([0-9]+\.){3}[0-9]+$/
       - move2downloads:
           requires:
               - manual_verify
-            filters:
-              tags:
-                only: /^([0-9]+\.){3}[0-9]+$/
+          filters:
+            tags:
+              only: /^([0-9]+\.){3}[0-9]+$/
       - generate_index_page:
           requires:
               - move2downloads
-            filters:
-              tags:
-                only: /^([0-9]+\.){3}[0-9]+$/
+          filters:
+            tags:
+              only: /^([0-9]+\.){3}[0-9]+$/
       - generate_list_files:
           requires:
               - move2downloads
-            filters:
-              tags:
-                only: /^([0-9]+\.){3}[0-9]+$/
+          filters:
+            tags:
+              only: /^([0-9]+\.){3}[0-9]+$/
       - move_list_files:
           requires:
               - move2downloads
-            filters:
-              tags:
-                only: /^([0-9]+\.){3}[0-9]+$/
+          filters:
+            tags:
+              only: /^([0-9]+\.){3}[0-9]+$/
 
