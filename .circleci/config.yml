@@ -101,13 +101,12 @@ jobs:
           name: Update Config.mk
           command:  |
             export MY_WORKING_DIRECTORY=`pwd`
-            sed -i "s/NoCall/${CIRCLE_BUILD_NUM}/g" ${MY_WORKING_DIRECTORY}/config.mk
-            sed -i "s/MAKE_ARGS=-j3/MAKE_ARGS=-j${DASH_J_VALUE}/g" ${MY_WORKING_DIRECTORY}/config.mk
-            # parse ${CIRCLE_TAG} into 3, 18, 3.18.9.0
             export MY_PROT_VER=$(echo ${CIRCLE_TAG} | cut -f1 -d.)
-            export MY_FW_YEAR=$(echo ${CIRCLE_TAG} | cut -f2 -d.)
-            # sed update downloads path with above
-            # sed change version to ${CIRCLE_TAG}
+            export MY_FW_YEAR=$(echo ${CIRCLE_TAG} | cut -f2 -d.) 
+            sed -i "s/NoCall/${CIRCLE_TAG}/g" ${MY_WORKING_DIRECTORY}/config.mk
+            sed -i "s/MAKE_ARGS=-j3/MAKE_ARGS=-j${DASH_J_VALUE}/g" ${MY_WORKING_DIRECTORY}/config.mk
+            sed -i "s/PRIVATE_BUILD_PACKAGES=http:\/\/downloads.arednmesh.org\/snapshots\/trunk/PRIVATE_BUILD_PACKAGES=http:\/\/downloads.arednmesh.org\/releases\/${PROT_VER}\/${FW_YEAR}\/${CIRCLE_TAG}/g" ${MY_WORKING_DIRECTORY}/config.mk
+            sed -i "s/FW_VERSION=\$(PRIVATE_BUILD_VERSION)-\$(GIT_COMMIT)/FW_VERSION=\$(PRIVATE_BUILD_VERSION)/g" ${MY_WORKING_DIRECTORY}/Makefile
             cat ${MY_WORKING_DIRECTORY}/config.mk
       - run:
           name: Build
