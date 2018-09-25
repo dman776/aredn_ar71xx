@@ -120,6 +120,7 @@ jobs:
       - run:
           name: Deploy Files
           command: scp -o StrictHostKeyChecking=no ~/${CIRCLE_BRANCH}_${ARTIFACTS_FILE} ${SSH_USER}@${SSH_HOST}:~/
+  
   process_artifacts_prod:
     machine:
       enabled: true
