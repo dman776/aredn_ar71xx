@@ -125,7 +125,6 @@ jobs:
       - restore_cache:
           keys:
             - artifacts-{{ .Branch }}-{{ .Revision }}
-        
       - run:
           name: Compress build files
           command: |
