@@ -128,6 +128,7 @@ jobs:
       - run:
           name: Compress build files
           command: |
+            export MY_WORKING_DIRECTORY=`pwd`
             echo "COMMAND: tar -cjf ~/${CIRCLE_BRANCH}_${ARTIFACTS_FILE} -C ${MY_WORKING_DIRECTORY}/${ARTIFACTS_DIR}"
             ls ${MY_WORKING_DIRECTORY}/${ARTIFACTS_DIR}
             tar -cjf ~/${CIRCLE_BRANCH}_${ARTIFACTS_FILE} -C ${MY_WORKING_DIRECTORY}/${ARTIFACTS_DIR} .
