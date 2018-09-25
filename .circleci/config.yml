@@ -141,8 +141,8 @@ jobs:
       enabled: true
     steps:
       - restore_cache:
-        keys:
-          - artifacts-tar-{{ .Branch }}-{{ .Revision }}
+          keys:
+            - artifacts-tar-{{ .Branch }}-{{ .Revision }}
       - run:
           name: Deploy Files
           command: scp -o StrictHostKeyChecking=no ~/${CIRCLE_BRANCH}_${ARTIFACTS_FILE} ${SSH_USER}@${SSH_HOST}:~/
