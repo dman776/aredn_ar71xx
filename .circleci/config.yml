@@ -225,7 +225,7 @@ workflows:
               only: /^([0-9]+\.){3}[0-9]+$/
       - process_artifacts_prod:
           requires:
-            - build
+            - build_prod
           filters:
             tags:
               only: /^([0-9]+\.){3}[0-9]+$/
