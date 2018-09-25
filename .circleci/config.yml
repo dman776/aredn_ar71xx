@@ -123,8 +123,8 @@ jobs:
       enabled: true
     steps:
       - restore_cache:
-        keys:
-          - artifacts-{{ .Branch }}-{{ .Revision }}
+          keys:
+            - artifacts-{{ .Branch }}-{{ .Revision }}
       - run:
           name: Compress build files
           command: |
@@ -132,9 +132,9 @@ jobs:
             ls ${MY_WORKING_DIRECTORY}/${ARTIFACTS_DIR}
             tar -cjf ~/${CIRCLE_BRANCH}_${ARTIFACTS_FILE} -C ${MY_WORKING_DIRECTORY}/${ARTIFACTS_DIR} .
       - save_cache:
-        key:  artifacts-tar-{{ .Branch }}-{{ .Revision }}
-        paths:
-          - "~/${CIRCLE_BRANCH}_${ARTIFACTS_FILE}"
+          key:  artifacts-tar-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - "~/${CIRCLE_BRANCH}_${ARTIFACTS_FILE}"
 
   deploy_files_prod:
     machine:
