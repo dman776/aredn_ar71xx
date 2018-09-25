@@ -123,8 +123,8 @@ jobs:
       enabled: true
     steps:
       - restore_cache:
-        keys:
-          - artifacts-{{ .Branch }}-{{ .Revision }}
+          keys:
+            - artifacts-{{ .Branch }}-{{ .Revision }}
       - run:
           name: Compress build files
           command: |
