@@ -124,7 +124,7 @@ jobs:
     steps:
       - restore_cache:
           keys:
-            - artifacts-{{ .Branch }}-{{ .Revision }}
+          - artifacts-{{ .Branch }}-{{ .Revision }}
       - run:
           name: Compress build files
           command: |
@@ -142,7 +142,7 @@ jobs:
     steps:
       - restore_cache:
           keys:
-            - artifacts-tar-{{ .Branch }}-{{ .Revision }}
+          - artifacts-tar-{{ .Branch }}-{{ .Revision }}
       - run:
           name: Deploy Files
           command: scp -o StrictHostKeyChecking=no ~/${CIRCLE_BRANCH}_${ARTIFACTS_FILE} ${SSH_USER}@${SSH_HOST}:~/
