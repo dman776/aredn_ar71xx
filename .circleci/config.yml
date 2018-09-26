@@ -116,7 +116,7 @@ jobs:
       - save_cache:
           key:  artifacts-{{ .Branch }}-{{ .Revision }}
           paths:
-            - "${MY_WORKING_DIRECTORY}/${ARTIFACTS_DIR}"
+            - "${ARTIFACTS_DIR}"
 
   compress_artifacts_prod:
     machine:
