@@ -511,6 +511,17 @@ my ($rc, $maptiles, $leafletcss, $leafletjs);
 ($rc, $leafletcss)=&uci_get_indexed_option("aredn","map",0,"leafletcss");
 ($rc, $leafletjs)=&uci_get_indexed_option("aredn","map",0,"leafletjs");
 
+
+#
+# Get Distance Values Driver
+#
+$distdriverval = `cat /sys/kernel/debug/ieee80211/${phy}/ath9k/ack_to`;
+chomp($distdriverval);
+($ddv, $ddt) = split / /, $distdriverval;
+$ddvmeters = int(($ddv - 64) * 151.515151);
+$ddvkm = int($ddvmeters/1000);
+$ddvdisp = int($ddvmeters * 0.00062137);
+
 #
 # generate the page
 #
@@ -555,15 +566,17 @@ function updDist(x) {
     var xc=dvs['meters'];
     var xck=dvs['kilometers'];
 
-    var distBox = document.getElementById('dist');
     var dist_meters=document.getElementsByName('wifi_distance')[0];
-    document.getElementsByName('wifi_distance_disp_miles')[0].value = xcm;
-    document.getElementsByName('wifi_distance_disp_km')[0].value = xck;
-    document.getElementsByName('wifi_distance_disp_meters')[0].value = xc;
+    document.getElementById('wifi_distance_disp_miles').textContent = xcm;
+    document.getElementById('wifi_distance_disp_km').textContent = xck;
+    document.getElementById('wifi_distance_disp_meters').textContent = xc;
+    if (x==0) {
+        document.getElementById('wifi_distance_how_calculated').textContent = 'AUTO-CALCULATED';
+    } else {
+        document.getElementById('wifi_distance_how_calculated').textContent = 'MANUALLY SET';
+    }
     dist_meters.value = xc;
-
-    // default of 0 means 'auto', so full range is always dist-norm
-    distBox.className = 'dist-norm';
+    document.getElementById('distance_slider_text').textContent = x;
 }
 
 
@@ -752,42 +765,61 @@ if ( ${wifi_enable} )
 
     push (@hidden, "<input type=hidden name=wifi_country value='HX'>");
 
+    ### --- ACTIVE SETTINGS SECTION START ---
     print "<tr><td colspan=2 align=center><hr><small>Active Settings</small></td></tr>\n";
 
+    ## --- TX Power Row START --
     print "<tr><td><nobr>Tx Power</nobr></td>\n";
     print "<td><select name=wifi_txpower>\n";
     my $txpoweroffset = wifi_txpoweroffset();
     for($i = wifi_maxpower($wifi_channel); $i >= 1; --$i) { selopt($i+$txpoweroffset ." dBm", $i, $wifi_txpower) }
     print "</select>&nbsp;&nbsp;<a href=\"/help.html\#power\" target=\"_blank\"><img src=\"/qmark.png\"></a></td></tr>\n";
+    ## --- TX Power Row END --
 
-    print "<tr id='dist' class='dist-norm'><td>Distance to<br/>FARTHEST Neighbor<br/><h3>'0' is auto</h3><br />Driver values:</td>\n";
-
+    ## --- DX Row START --
     $wifi_distance=int($wifi_distance);  # in meters
-    $wifi_distance_disp_km=int($wifi_distance/1000);
-    $wifi_distance_disp_miles=sprintf("%.2f",$wifi_distance_disp_km*.621371192);
+    if ($wifi_distance eq 0) {
+        $wifi_distance_disp_slider=0;
+        $wifi_distance_disp_km=int($ddvmeters/1000);
+        $wifi_distance_disp_miles=sprintf("%.2f",$wifi_distance_disp_km*.621371192);
+        $wifi_distance_disp_meters=$ddvmeters;
+    } else {
+        $wifi_distance_disp_km=int($wifi_distance/1000);
+        $wifi_distance_disp_slider = $wifi_distance_disp_km;
+        $wifi_distance_disp_miles=sprintf("%.2f",$wifi_distance_disp_km*.621371192);
+        $wifi_distance_disp_meters=$wifi_distance;
+    }
+  
+    if ($wifi_distance_disp_slider eq '0') {
+        $wifi_distance_how_calculated="AUTO-CALCULATED"; 
+    } else {
+        $wifi_distance_how_calculated="MANUALLY SET"; 
+    }
+    
+    print "<tr><td colspan='2' style='text-align:center;'>Distance Selector:<br />";
+    print "(Set selector to '0' for auto calculate)<br /><br />";
+    print "<input style='width: 100%;' name='distance_slider' id='distance_slider' type='range' min='0' max='150' step='1' value='$wifi_distance_disp_slider' oninput='updDist(this.value)' onchange='updDist(this.value)' />";
+    print "<span id='distance_slider_text'>$wifi_distance_disp_slider</span>&nbsp;kilometers";
+    print "<br /><br />";
+    print "Distance: ";
+    print "<span id='wifi_distance_how_calculated'>$wifi_distance_how_calculated</span>";
+    print "</td>";
+    print "</tr>";
+    print "<tr><td colspan=2>&nbsp;</td></tr>";
 
-    print "<td><input disabled size=6 type=text name='wifi_distance_disp_miles' value='$wifi_distance_disp_miles' title='Distance to the farthest neighbor'>&nbsp;mi<br />";
-    print "<input disabled size=6 type=text size=4 name='wifi_distance_disp_km' value='$wifi_distance_disp_km' title='Distance to the farthest neighbor'>&nbsp;km<br />";
-    print "<input disabled size=6 type=text size=4 name='wifi_distance_disp_meters' value='$wifi_distance' title='Distance to the farthest neighbor'>&nbsp;m<br />";
+    print "<tr>";
+    print "<td>Distance to<br/>FARTHEST Neighbor</td>";
 
-    print "<input id='distance_slider' type='range' min='0' max='150' step='1' value='$wifi_distance_disp_km' oninput='updDist(this.value)' onchange='updDist(this.value)' /><br />";
-    print "<input type='hidden' size='6' name='wifi_distance' value='$wifi_distance' /><br />";
-    $distdebugval = `cat /sys/kernel/debug/ieee80211/${phy}/ath9k/ack_to`;
-    chomp($distdebugval);
-    ($ddv, $ddt) = split / /, $distdebugval;
-    $ddvmeters = int(($ddv - 64) * 151.515151);
-    $ddvkm = int($ddvmeters/1000);
-    $ddvdisp = int($ddvmeters * 0.00062137);
-    print "($distdebugval)<br />";
-    #print "$ddv <br />";
-    #print "$ddt <br />";
-    print "$ddvdisp mi<br />";
-    print "$ddvkm km<br />";
-    print "$ddvmeters m<br />";
-    print "</td></tr>\n";
-
+    print "<td style='background-color: white;'>";
+    print "<span id='wifi_distance_disp_miles'>$wifi_distance_disp_miles</span>&nbsp;miles<br />";
+    print "<span id='wifi_distance_disp_km'>$wifi_distance_disp_km</span>&nbsp;kilometers<br />";
+    print "<span id='wifi_distance_disp_meters'>$wifi_distance_disp_meters</span>&nbsp;meters<br />";
+    print "<input type='hidden' size='6' name='wifi_distance' value='$wifi_distance' />";
+    print "</td>";
+    print "</tr>";
+    ## --- DX Row END --
     print "<tr><td></td><td><input type=submit name=button_apply value=Apply title='Immediately use these active settings'></td></tr>\n";
-
+    ### --- ACTIVE SETTINGS SECTION END ---
 }
 else
 {
