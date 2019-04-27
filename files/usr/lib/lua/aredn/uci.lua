@@ -41,7 +41,7 @@ local api = {}
 function api.getUciConfType(conf,type)
    local curs=uci.cursor()
    local ifce={}
-   curs:foreach(conf,type,function(s) ifce[s[".index"]]=s end)
+   curs:foreach(conf,type,function(s) table.insert(ifce,s) end)
    return ifce
 end
 

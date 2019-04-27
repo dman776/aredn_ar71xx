@@ -2,7 +2,7 @@
 --[[
 
 	Part of AREDN -- Used for creating Amateur Radio Emergency Data Networks
-	Copyright (C) 2016 Darryl Quinn
+	Copyright (C) 2019 Darryl Quinn
 	See Contributors file for additional contributors
 
 	This program is free software: you can redistribute it and/or modify
@@ -91,6 +91,12 @@ function Neighbor.create(macaddress)
   n.rx_mcs=n:findRxMcs()
   n.rx_rate=n:findRxRate()
   n.lastseen=n:findLastTime()
+  -- check if auto-distance reset is required (new node)
+  local efn=self:getExistingDataFileName()
+  if efn==nil then  -- NEW node
+    reset_auto_distance()
+  end
+
   n.datafile=n:generateDataFileName()
   return n
 end
